@@ -40,16 +40,9 @@ npm install
 Start the development server:
 npm run dev
 
-Open http://localhost:5173 to view the app in your browser.
+Open https://fusebox-assement.vercel.app/ to view the app in your browser.
 
-Project Structure
-src/
-├── components/ # Reusable UI components
-│ ├── panic/ # Panic-related components
-│ ├── layout/ # Layout components
-├── contexts/ # React contexts
-├── pages/ # Page components
-├── services/ # API services
+
 
 
 Usage
