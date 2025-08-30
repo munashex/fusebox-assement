@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+
+//Contexts and Components
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard' 
+import History from './pages/History' 
+import Layout from './components/layout/Layout'
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { token } = useAuth();
+  return token ? children : <Navigate to="/login" replace />;
+};
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-100">
+          <Routes>
+            {/* Public Route */}
+            <Route path="/login" element={<Login />} />
+            
+            {/* Protected Routes */}
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/history" element={
+              <ProtectedRoute>
+                <Layout>
+                  <History />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            {/* Catch all route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          
+          {/* Toast Notifications */}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+            }}
+          />
+        </div>
+      </Router>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
